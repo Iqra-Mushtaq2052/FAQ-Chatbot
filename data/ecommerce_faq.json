@@ -1,0 +1,34 @@
+[
+  {
+    "question": "What are your shipping options and delivery times?",
+    "answer": "We offer standard shipping (3-5 business days) and express shipping (1-2 business days). Shipping is free for orders over $50."
+  },
+  {
+    "question": "How can I track my order?",
+    "answer": "Once your order ships, we will send you an email with a tracking number and a link. You can also track it in the 'My Orders' section of your account."
+  },
+  {
+    "question": "What is your return and refund policy?",
+    "answer": "You can return any unused item within 30 days of purchase for a full refund. Return shipping is free, and refunds are processed within 5-7 business days after we receive the item."
+  },
+  {
+    "question": "Can I change or cancel my order after placing it?",
+    "answer": "Orders can be changed or canceled within 1 hour of placing them. Please contact our support team immediately or go to your account orders page to request a cancellation."
+  },
+  {
+    "question": "What payment methods do you accept?",
+    "answer": "We accept all major credit and debit cards (Visa, MasterCard, American Express), PayPal, Apple Pay, and Google Pay."
+  },
+  {
+    "question": "What should I do if I received a damaged or incorrect item?",
+    "answer": "We are very sorry! Please contact our customer support team within 48 hours of delivery with your order number and photos of the item. We will ship a replacement or issue a refund immediately."
+  },
+  {
+    "question": "How do I reset my account password?",
+    "answer": "Click on the 'Forgot Password' link on the login page, enter your registered email address, and we will send you a reset link instructions."
+  },
+  {
+    "question": "Do you ship internationally?",
+    "answer": "Yes, we ship to over 100 countries. International shipping fees and delivery times vary by destination and will be calculated at checkout."
+  }
+]
