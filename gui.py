@@ -19,10 +19,10 @@ class FAQChatbotGUI(ctk.CTk):
         self.engine = engine
         self.llm = llm_engine if llm_engine else OllamaLLM()
         self.default_db_path = default_db_path
-        self.current_loaded_file = default_db_path
         self.similarity_threshold = 0.30
         self.llm_mode_active = False
         self.is_llm_responding = False  # Lock to prevent double-sends while streaming
+        self.active_language = "Auto Detect"
         
         # Configure window settings
         self.title("AI FAQ Chatbot - Professional Suite")
@@ -224,18 +224,34 @@ class FAQChatbotGUI(ctk.CTk):
         )
         self.chat_title.grid(row=0, column=0, padx=20, pady=10, sticky="w")
         
-        # Clear button
+        # Chat Header Controls (Language Selector + Clear Chat)
+        ctrl_frame = ctk.CTkFrame(self.chat_header, fg_color="transparent")
+        ctrl_frame.grid(row=0, column=1, padx=20, pady=10, sticky="e")
+        
+        lang_lbl = ctk.CTkLabel(ctrl_frame, text="Language:", font=ctk.CTkFont(size=12))
+        lang_lbl.pack(side="left", padx=(0, 6))
+        
+        self.lang_option = ctk.CTkOptionMenu(
+            ctrl_frame,
+            values=["Auto Detect", "English", "Hinglish (Roman Urdu)", "Urdu (اردو)"],
+            width=150,
+            height=26,
+            command=self._on_language_changed
+        )
+        self.lang_option.set(self.active_language)
+        self.lang_option.pack(side="left", padx=(0, 10))
+        
         self.clear_btn = ctk.CTkButton(
-            self.chat_header, 
+            ctrl_frame, 
             text="Clear Chat", 
             width=80, 
-            height=25, 
+            height=26, 
             fg_color="transparent", 
             border_width=1, 
             text_color=("gray10", "gray90"),
             command=self._clear_chat_log
         )
-        self.clear_btn.grid(row=0, column=1, padx=20, pady=10, sticky="e")
+        self.clear_btn.pack(side="left")
         
         # Chat Messages Scrollable Frame
         self.chat_scroll = ctk.CTkScrollableFrame(chat_frame, corner_radius=0, fg_color="transparent")
@@ -451,6 +467,10 @@ class FAQChatbotGUI(ctk.CTk):
         self.update_idletasks()
         self.chat_scroll._parent_canvas.yview_moveto(1.0)
 
+    def _on_language_changed(self, new_lang):
+        """Called when user changes the language dropdown."""
+        self.active_language = new_lang
+
     def _send_user_message(self):
         """Triggered when sending a message. Routes to FAQ engine or LLM based on active mode."""
         query = self.entry_field.get().strip()
@@ -463,6 +483,21 @@ class FAQChatbotGUI(ctk.CTk):
             
         # Clear field
         self.entry_field.delete(0, tk.END)
+        
+        # Check for explicit language switch requests in query
+        lower_q = query.lower()
+        if any(p in lower_q for p in ["answer in english", "answer me in english", "in english please", "speak in english", "talk in english", "english me bolo", "english ma bolo", "english please"]):
+            self.active_language = "English"
+            if hasattr(self, 'lang_option'):
+                self.lang_option.set("English")
+        elif any(p in lower_q for p in ["in hinglish", "hinglish me", "hinglish ma", "speak in hinglish", "talk in hinglish", "hinglish bolo", "roman urdu"]):
+            self.active_language = "Hinglish (Roman Urdu)"
+            if hasattr(self, 'lang_option'):
+                self.lang_option.set("Hinglish (Roman Urdu)")
+        elif any(p in lower_q for p in ["in urdu", "urdu me", "urdu ma", "speak in urdu", "talk in urdu", "urdu bolo", "اردو میں"]):
+            self.active_language = "Urdu (اردو)"
+            if hasattr(self, 'lang_option'):
+                self.lang_option.set("Urdu (اردو)")
         
         # Add user bubble
         self._add_user_message(query)
@@ -533,10 +568,11 @@ class FAQChatbotGUI(ctk.CTk):
                     ans, score, suggestions = self.engine.get_response(query, self.similarity_threshold)
                     self._add_bot_message(ans, score, suggestions)
                 else:
-                    # Add LLM badge
+                    # Add LLM badge with language tag
+                    badge_text = f"Powered by LLM (Ollama) • {self.active_language}"
                     badge = ctk.CTkLabel(
                         footer,
-                        text="Powered by LLM (Ollama)",
+                        text=badge_text,
                         text_color="gray50",
                         font=ctk.CTkFont(size=10, slant="italic")
                     )
@@ -567,12 +603,13 @@ class FAQChatbotGUI(ctk.CTk):
             
             self.after(0, _finish)
         
-        # Fire the background thread
+        # Fire the background thread with active language
         self.llm.generate_response_threaded(
             query,
             self.engine.faqs,
             on_token_callback=on_token,
-            on_complete_callback=on_complete
+            on_complete_callback=on_complete,
+            target_language=self.active_language
         )
 
     def _update_streaming_label(self, label, text):

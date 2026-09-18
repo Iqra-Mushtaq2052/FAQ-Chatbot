@@ -51,26 +51,47 @@ class OllamaLLM:
             self.is_connected = False
             return False, f"Connection error: {str(e)}"
 
-    def _build_system_prompt(self, faq_list):
+    def _build_system_prompt(self, faq_list, target_language="Auto Detect"):
         """
         Builds a system instruction prompt embedding the FAQ database
-        as the chatbot's knowledge base context with multilingual capability.
+        as the chatbot's knowledge base context with strict multilingual controls.
         """
+        tl = target_language.lower()
+        if "english" in tl:
+            lang_directive = (
+                "=== STRICT LANGUAGE DIRECTIVE: MANDATORY ENGLISH ===\n"
+                "1. The user has explicitly selected ENGLISH.\n"
+                "2. You MUST answer 100% in proper, grammatically correct ENGLISH.\n"
+                "3. Absolutely DO NOT use Hinglish, Hindi, or Urdu. Not even a single non-English word.\n"
+            )
+        elif "hinglish" in tl:
+            lang_directive = (
+                "=== STRICT LANGUAGE DIRECTIVE: MANDATORY HINGLISH (ROMAN URDU) ===\n"
+                "1. The user has chosen HINGLISH (Roman Urdu written in English alphabet).\n"
+                "2. You MUST answer in friendly, natural Hinglish (e.g., 'Artificial Intelligence (AI) ek computer science ka shoba hai...').\n"
+                "3. Do NOT answer in pure English.\n"
+            )
+        elif "urdu" in tl:
+            lang_directive = (
+                "=== STRICT LANGUAGE DIRECTIVE: MANDATORY URDU SCRIPT ===\n"
+                "1. The user has chosen URDU script (اردو).\n"
+                "2. You MUST answer in clean, proper Urdu script.\n"
+            )
+        else:
+            lang_directive = (
+                "=== LANGUAGE MATCHING DIRECTIVE ===\n"
+                "1. If the user's question is written in English (e.g., 'What is Artificial Intelligence (AI)?'), you MUST respond 100% in ENGLISH. Never respond in Hinglish to an English question.\n"
+                "2. If the user's question is in Hinglish / Roman Urdu (e.g., 'AI kya hota hai?'), respond in friendly Hinglish.\n"
+                "3. If the user's question is in Urdu script (e.g., 'مصنوعی ذہانت کیا ہے؟'), respond in Urdu script.\n"
+            )
+
         prompt = (
-            "You are a friendly, helpful, and highly accessible AI FAQ Assistant. "
-            "Your goal is to make answers easy to understand for everyone, including beginners and non-technical people.\n\n"
-            "=== MULTILINGUAL & COMMUNICATION RULES (CRITICAL) ===\n"
-            "1. AUTOMATIC LANGUAGE MATCHING:\n"
-            "   - If the user talks in or asks for Hinglish / Roman Urdu (e.g. 'kya hal hai', 'hinglish me baat kro', 'order kaisy hoga', 'urdu me bolo', etc.), "
-            "     you MUST respond in natural, friendly, conversational Hinglish (Roman Urdu).\n"
-            "   - If the user talks in Urdu script (e.g. 'آپ کیسے ہیں؟'), respond in clean, natural Urdu.\n"
-            "   - If the user talks in English, respond in clear, simple English.\n"
-            "   - If the user asks to switch language (e.g. 'speak in Hinglish', 'English me bolo', 'Urdu please'), immediately switch to that language and acknowledge pleasantly.\n"
-            "2. SIMPLICITY:\n"
-            "   - Explain concepts in simple, easy-to-understand words. Avoid overly complex technical jargon unless asked.\n"
-            "3. KNOWLEDGE USAGE:\n"
-            "   - Use the knowledge base below to answer questions accurately. If answering in Hinglish or Urdu, translate and adapt the knowledge naturally so it sounds human and conversational.\n"
-            "   - If a question is about casual conversation or not in the knowledge base, respond politely, helpfully, and naturally.\n\n"
+            "You are a friendly, helpful, and highly intelligent AI FAQ Assistant.\n\n"
+            f"{lang_directive}\n"
+            "=== GENERAL GUIDELINES ===\n"
+            "- Explain concepts in simple, accessible terms so anyone can easily understand.\n"
+            "- If the question relates to the FAQ knowledge base below, use that knowledge accurately.\n"
+            "- If the question is casual or not in the knowledge base, respond politely, helpfully, and concisely.\n\n"
             "=== KNOWLEDGE BASE (FAQ Database) ===\n"
         )
 
@@ -81,11 +102,11 @@ class OllamaLLM:
             prompt += "\n(No FAQs currently loaded)\n"
 
         prompt += "\n=== END OF KNOWLEDGE BASE ===\n\n"
-        prompt += "Now answer the user's question following the language and tone rules above:\n\n"
+        prompt += "Now answer the user's question following the language directive above:\n\n"
 
         return prompt
 
-    def generate_response(self, user_query, faq_list, on_token_callback=None):
+    def generate_response(self, user_query, faq_list, on_token_callback=None, target_language="Auto Detect"):
         """
         Sends the user query (with FAQ context) to the Ollama API.
         Streams the response token-by-token via on_token_callback.
@@ -94,6 +115,7 @@ class OllamaLLM:
             user_query (str): The user's question.
             faq_list (list): Current FAQ database list of dicts.
             on_token_callback (callable): Called with each token string as it arrives.
+            target_language (str): 'Auto Detect', 'English', 'Hinglish (Roman Urdu)', 'Urdu (اردو)'
 
         Returns:
             (full_response: str, success: bool, error_msg: str)
@@ -101,7 +123,7 @@ class OllamaLLM:
         if not self.base_url:
             return "", False, "Server URL is not configured. Go to Settings to set it up."
 
-        system_prompt = self._build_system_prompt(faq_list)
+        system_prompt = self._build_system_prompt(faq_list, target_language)
         full_prompt = system_prompt + f"User: {user_query}\nAssistant:"
 
         try:
@@ -144,17 +166,13 @@ class OllamaLLM:
         except Exception as e:
             return "", False, f"LLM error: {str(e)}"
 
-    def generate_response_threaded(self, user_query, faq_list, on_token_callback=None, on_complete_callback=None):
+    def generate_response_threaded(self, user_query, faq_list, on_token_callback=None, on_complete_callback=None, target_language="Auto Detect"):
         """
         Runs generate_response in a background thread so the GUI doesn't freeze.
-
-        Args:
-            on_token_callback: Called with each token (from background thread, use after() in GUI).
-            on_complete_callback: Called with (full_response, success, error_msg) when done.
         """
         def _worker():
             full_text, success, error = self.generate_response(
-                user_query, faq_list, on_token_callback
+                user_query, faq_list, on_token_callback, target_language
             )
             if on_complete_callback:
                 on_complete_callback(full_text, success, error)
