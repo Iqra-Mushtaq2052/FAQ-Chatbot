@@ -1,0 +1,110 @@
+[
+  {
+    "question": "Hello, hi, hey, greetings",
+    "answer": "Hello! I am your AI Assistant. How can I help you today? You can ask me questions about technology, general support, orders, education, or anything else!"
+  },
+  {
+    "question": "How are you? How are you doing?",
+    "answer": "I am doing great and ready to assist you! What would you like to know or discuss today?"
+  },
+  {
+    "question": "Who are you? What is your name?",
+    "answer": "I am an AI-powered FAQ Chatbot Assistant built to answer your questions accurately across multiple topics."
+  },
+  {
+    "question": "What can you do? How can you help me?",
+    "answer": "I can answer general inquiries, explain technology and AI concepts, assist with order tracking and returns, guide you through account settings, and provide educational and support FAQs."
+  },
+  {
+    "question": "Thank you, thanks a lot",
+    "answer": "You are very welcome! If you have any other questions, feel free to ask anytime."
+  },
+  {
+    "question": "Goodbye, bye, see you later",
+    "answer": "Goodbye! Have a wonderful day ahead, and feel free to return whenever you need assistance."
+  },
+  {
+    "question": "Tell me a joke",
+    "answer": "Why do programmers prefer dark mode? Because light attracts bugs! 😄"
+  },
+  {
+    "question": "What is Artificial Intelligence (AI)?",
+    "answer": "Artificial Intelligence (AI) is a branch of computer science that enables machines to simulate human intelligence, including learning, reasoning, problem-solving, and natural language understanding."
+  },
+  {
+    "question": "What is Machine Learning and how does it work?",
+    "answer": "Machine Learning is a subset of AI that allows systems to learn patterns from data and improve their performance over time without being explicitly programmed."
+  },
+  {
+    "question": "What is Natural Language Processing (NLP)?",
+    "answer": "Natural Language Processing (NLP) is an AI technology that helps computers understand, interpret, and manipulate human language (like English or Urdu) using techniques like tokenization, TF-IDF, and transformers."
+  },
+  {
+    "question": "What is Python and why is it popular?",
+    "answer": "Python is a high-level, interpreted programming language known for its clean syntax and readability. It is widely used for Web Development, Data Science, Artificial Intelligence, and Automation."
+  },
+  {
+    "question": "What is Cloud Computing?",
+    "answer": "Cloud Computing is the delivery of computing services—including servers, storage, databases, networking, and software—over the Internet ('the cloud') on a pay-as-you-go basis."
+  },
+  {
+    "question": "What is an API (Application Programming Interface)?",
+    "answer": "An API is a set of rules and protocols that allows different software applications to communicate and share data with each other."
+  },
+  {
+    "question": "How can I protect my online account and passwords?",
+    "answer": "Use strong passwords with a mix of letters, numbers, and symbols; enable Two-Factor Authentication (2FA); avoid sharing credentials; and never click suspicious phishing links."
+  },
+  {
+    "question": "How can I contact customer support or help desk?",
+    "answer": "You can reach our customer support team 24/7 via email at support@example.com or call our toll-free helpline at +1 (800) 123-4567."
+  },
+  {
+    "question": "How do I reset my forgotten password?",
+    "answer": "Go to the login screen, click 'Forgot Password', enter your registered email address, and follow the password reset link sent to your inbox."
+  },
+  {
+    "question": "What are your standard business working hours?",
+    "answer": "Our standard business office hours are Monday through Friday from 9:00 AM to 6:00 PM (EST). Online automated support is available 24/7."
+  },
+  {
+    "question": "How do I create or register a new user account?",
+    "answer": "Click on the 'Sign Up' or 'Register' button on the homepage, enter your name, email address, and password, and verify your email to complete registration."
+  },
+  {
+    "question": "How can I track my shipment or order status?",
+    "answer": "Once your order is dispatched, a tracking number and link are emailed to you. You can also track real-time delivery status under the 'My Orders' section."
+  },
+  {
+    "question": "What is the return and refund policy?",
+    "answer": "You can return unused products within 30 days of delivery for a full refund. Refunds are typically processed back to your original payment method within 5-7 business days."
+  },
+  {
+    "question": "What payment methods and cards do you accept?",
+    "answer": "We accept major credit/debit cards (Visa, MasterCard, American Express), PayPal, Apple Pay, Google Pay, and online bank transfers."
+  },
+  {
+    "question": "Can I cancel or modify my order after placing it?",
+    "answer": "You can cancel or modify your order within 1 hour of placement from your account dashboard or by immediately notifying customer support."
+  },
+  {
+    "question": "What should I do if I receive a damaged or wrong item?",
+    "answer": "Please take clear photos of the damaged or incorrect item and contact support within 48 hours. We will arrange a free replacement or complete refund right away."
+  },
+  {
+    "question": "What are the general university admission requirements?",
+    "answer": "Undergraduate admissions usually require a high school diploma with a minimum GPA of 2.5, official transcripts, recommendation letters, and standardized test scores (if applicable)."
+  },
+  {
+    "question": "Are there scholarships or financial aid available?",
+    "answer": "Yes, merit-based scholarships (for high academic achievers) and need-based financial aid are offered. Applications can be submitted online via the financial aid portal."
+  },
+  {
+    "question": "How can I prepare effectively for a job interview?",
+    "answer": "Research the company thoroughly, practice common technical and behavioral interview questions, review your resume projects, and prepare thoughtful questions to ask the interviewer."
+  },
+  {
+    "question": "How can a beginner start learning programming?",
+    "answer": "Start with a beginner-friendly language like Python, practice daily on problem-solving platforms, build small practical projects, and read standard documentation and tutorials."
+  }
+]
