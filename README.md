@@ -150,8 +150,15 @@ Testing Case: [Out of Vocabulary (Unrelated)]               [PASS]
 SUCCESS: ALL TEST CASES PASSED SUCCESSFULLY!
 ```
 
+## 👩‍💻 Author
+
+**Iqra Mushtaq**  
+- GitHub: [@Iqra-Mushtaq2052](https://github.com/Iqra-Mushtaq2052)
+- Project: AI Chatbot for FAQs (Internship Project)
+
 ---
 
 ## 📄 License
 
 This project is licensed under the MIT License - feel free to use, modify, and distribute it for academic, personal, or commercial purposes.
+
