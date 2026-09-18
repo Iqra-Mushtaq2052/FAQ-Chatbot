@@ -17,9 +17,10 @@ The chatbot provides seamless **multilingual communication** in **Hinglish (Roma
 - ⚡ **Dual-Mode AI Engine:**
   - **FAQ Mode (Offline):** Instant keyword and semantic matching using TF-IDF and Cosine Similarity. No internet connection required.
   - **LLM Mode (Online):** Connects to a self-hosted Ollama server via ngrok or local URL. Injects the active FAQ database as context and streams AI responses live token-by-token (ChatGPT-like experience).
-- 🌐 **Multilingual Support:**
+- 🌐 **Multilingual Support & Language Control:**
+  - **Interactive Language Selector Dropdown:** Easily choose between **Auto Detect**, **English**, **Hinglish (Roman Urdu)**, and **Urdu (اردو)** directly from the chat header.
   - Automatically recognizes and responds in **Hinglish / Roman Urdu** (e.g., *"kya hal hai"*, *"order kaisy cancel hoga"*), **Urdu script** (e.g., *"آپ کیسے ہیں؟"*), and **English**.
-  - Supports explicit language-switch requests (e.g., *"Hinglish me baat kro"*, *"speak in English"*).
+  - Supports natural conversational language switching (e.g., *"answer me in english"*, *"hinglish me baat kro"*).
   - Uses friendly, simple explanations accessible to non-technical users and students.
 - 📋 **Complete Clipboard Integration:**
   - Dedicated **"📋 Copy"** button on every user question and bot response with instant *"Copied! ✓"* visual confirmation.
