@@ -773,6 +773,9 @@ class FAQChatbotGUI(ctk.CTk):
 
     def _refresh_manager_list(self):
         """Clears and re-populates the FAQ list side using search filter query."""
+        # Freeze UI to prevent flicker during rebuild
+        self.list_scroll.pack_forget()
+        
         # Clear list
         for widget in self.list_scroll.winfo_children():
             widget.destroy()
@@ -870,6 +873,10 @@ class FAQChatbotGUI(ctk.CTk):
         if displayed_count == 0:
             empty_lbl = ctk.CTkLabel(self.list_scroll, text="No FAQs matching your query.", text_color="gray50")
             empty_lbl.pack(pady=20)
+        
+        # Unfreeze: show the rebuilt list in one clean frame
+        self.list_scroll.grid(row=1, column=0, sticky="nsew")
+        self.update_idletasks()
 
     def _select_faq_item(self, idx):
         """Loads selected FAQ into editing fields on the right side."""
