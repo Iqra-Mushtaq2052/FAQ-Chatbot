@@ -29,6 +29,9 @@ The chatbot provides seamless **multilingual communication** in **Hinglish (Roma
 - 📚 **Interactive Database Manager:**
   - Split-pane layout: live search/filter on the left, full edit form on the right.
   - **Full CRUD Support:** Add new FAQs, edit existing records, or delete items.
+  - **Quick Inline Actions:** Each FAQ card features an instant **🗑️ Delete Button**, item numbering, and a real-time answer preview.
+  - **Batch Management:** Top **"Delete All"** button with double safety confirmation to clear the database.
+  - **Smooth UI:** Anti-flicker frame rendering for seamless addition/deletion without visual glitches.
   - Instantly retrains the vectorizer in-memory upon saving changes.
 - ⚙️ **Comprehensive Settings & Diagnostics:**
   - Similarity threshold slider (0.0 to 1.0) to control match sensitivity.
