@@ -701,7 +701,18 @@ class FAQChatbotGUI(ctk.CTk):
             height=35,
             command=self._prepare_create_form
         )
-        self.new_faq_btn.grid(row=0, column=1)
+        self.new_faq_btn.grid(row=0, column=1, padx=(0, 5))
+        
+        self.delete_all_btn = ctk.CTkButton(
+            self.search_row,
+            text="🗑️ Delete All",
+            width=90,
+            height=35,
+            fg_color="red",
+            hover_color="darkred",
+            command=self._delete_all_faqs
+        )
+        self.delete_all_btn.grid(row=0, column=2)
         
         # FAQ Database List Container
         self.list_scroll = ctk.CTkScrollableFrame(self.left_pane, fg_color=("gray95", "gray20"))
@@ -779,35 +790,81 @@ class FAQChatbotGUI(ctk.CTk):
                 continue
                 
             displayed_count += 1
+            is_selected = (idx == self.selected_faq_idx)
             
             # Create list item frame card
             card = ctk.CTkFrame(
                 self.list_scroll, 
-                fg_color=("gray90", "gray25") if idx != self.selected_faq_idx else ("#1f6aa5", "#1f6aa5"),
+                fg_color=("gray90", "gray25") if not is_selected else ("#1f6aa5", "#1f6aa5"),
                 corner_radius=6,
                 cursor="hand2"
             )
-            card.pack(fill="x", pady=4, padx=5)
+            card.pack(fill="x", pady=3, padx=5)
+            card.grid_columnconfigure(0, weight=1)
             
-            # Pack inside card
-            lbl_color = "white" if idx == self.selected_faq_idx else ("gray10", "gray90")
-            lbl = ctk.CTkLabel(
-                card, 
-                text=q_text, 
+            # Left content area (question + answer preview)
+            content_frame = ctk.CTkFrame(card, fg_color="transparent")
+            content_frame.grid(row=0, column=0, sticky="ew", padx=(10, 0), pady=6)
+            
+            # Question label with numbering
+            lbl_color = "white" if is_selected else ("gray10", "gray90")
+            q_label = ctk.CTkLabel(
+                content_frame, 
+                text=f"{idx + 1}. {q_text}", 
                 anchor="w", 
                 justify="left", 
                 text_color=lbl_color,
-                wraplength=450,
-                font=ctk.CTkFont(size=12, weight="bold" if idx == self.selected_faq_idx else "normal"),
-                padx=10,
-                pady=10
+                wraplength=400,
+                font=ctk.CTkFont(size=12, weight="bold" if is_selected else "normal"),
             )
-            lbl.pack(fill="both", expand=True)
+            q_label.pack(fill="x", anchor="w")
             
-            # Bind click events to select item
-            # Bind to both frame and label so clicking either selects
+            # Answer preview (truncated)
+            preview = a_text[:80] + "..." if len(a_text) > 80 else a_text
+            preview_color = "gray85" if is_selected else ("gray50", "gray60")
+            a_preview = ctk.CTkLabel(
+                content_frame,
+                text=preview,
+                anchor="w",
+                justify="left",
+                text_color=preview_color,
+                wraplength=400,
+                font=ctk.CTkFont(size=10),
+            )
+            a_preview.pack(fill="x", anchor="w", pady=(2, 0))
+            
+            # Right side: inline delete button
+            del_btn = ctk.CTkButton(
+                card,
+                text="🗑️",
+                width=32,
+                height=32,
+                fg_color=("red", "#cc3333") if not is_selected else ("#cc0000", "#aa0000"),
+                hover_color=("darkred", "#990000"),
+                corner_radius=6,
+                font=ctk.CTkFont(size=14),
+                command=lambda i=idx: self._quick_delete_faq(i)
+            )
+            del_btn.grid(row=0, column=1, padx=(5, 8), pady=6)
+            
+            # Bind click events to select item (content area and card, NOT the delete button)
             card.bind("<Button-1>", lambda event, i=idx: self._select_faq_item(i))
-            lbl.bind("<Button-1>", lambda event, i=idx: self._select_faq_item(i))
+            content_frame.bind("<Button-1>", lambda event, i=idx: self._select_faq_item(i))
+            q_label.bind("<Button-1>", lambda event, i=idx: self._select_faq_item(i))
+            a_preview.bind("<Button-1>", lambda event, i=idx: self._select_faq_item(i))
+
+        # Show count in search placeholder
+        total = len(self.engine.faqs)
+        self.search_entry.configure(
+            placeholder_text=f"🔍 Search in {total} FAQs..."
+        )
+        
+        # Update delete all button state
+        if hasattr(self, 'delete_all_btn'):
+            if total > 0:
+                self.delete_all_btn.configure(state="normal")
+            else:
+                self.delete_all_btn.configure(state="disabled")
 
         # Show if empty
         if displayed_count == 0:
@@ -896,6 +953,63 @@ class FAQChatbotGUI(ctk.CTk):
             self._refresh_quick_questions()
         else:
             messagebox.showerror("Error", msg)
+
+    def _quick_delete_faq(self, idx):
+        """Inline one-click delete from the FAQ list card's delete button."""
+        if idx < 0 or idx >= len(self.engine.faqs):
+            return
+            
+        q_text = self.engine.faqs[idx]['question']
+        short_q = q_text[:60] + "..." if len(q_text) > 60 else q_text
+        
+        confirm = messagebox.askyesno(
+            "Delete FAQ",
+            f"Are you sure you want to delete this FAQ?\n\n\"{short_q}\""
+        )
+        if not confirm:
+            return
+        
+        success, msg = self.engine.delete_faq(idx)
+        if success:
+            # Reset selection if deleted item was selected
+            if self.selected_faq_idx == idx:
+                self._prepare_create_form()
+            elif self.selected_faq_idx is not None and self.selected_faq_idx > idx:
+                self.selected_faq_idx -= 1
+            self._refresh_manager_list()
+            self._refresh_quick_questions()
+        else:
+            messagebox.showerror("Error", msg)
+
+    def _delete_all_faqs(self):
+        """Deletes all FAQs from the current database after double confirmation."""
+        if not self.engine.faqs:
+            messagebox.showinfo("Empty", "The FAQ database is already empty.")
+            return
+        
+        total = len(self.engine.faqs)
+        confirm1 = messagebox.askyesno(
+            "Delete All FAQs",
+            f"Are you sure you want to delete ALL {total} FAQs from the database?\n\nThis action cannot be undone!"
+        )
+        if not confirm1:
+            return
+        
+        confirm2 = messagebox.askyesno(
+            "Final Confirmation",
+            f"This will permanently remove all {total} FAQ records and retrain the model.\n\nProceed?"
+        )
+        if not confirm2:
+            return
+        
+        # Delete all FAQs one by one from the end
+        while self.engine.faqs:
+            self.engine.delete_faq(len(self.engine.faqs) - 1)
+        
+        messagebox.showinfo("Success", f"All {total} FAQs have been deleted.")
+        self._prepare_create_form()
+        self._refresh_manager_list()
+        self._refresh_quick_questions()
 
     # =========================================================================
     # SETTINGS & INFO TAB
