@@ -101,10 +101,17 @@ pip install customtkinter scikit-learn nltk requests scipy numpy
 ```
 
 ### 4. Run the Application
+
+#### Option A: Run the Desktop GUI (CustomTkinter)
 ```bash
 python main.py
 ```
-> **Note:** On first startup, `main.py` automatically downloads required NLTK corpora (`punkt`, `wordnet`, `stopwords`, `omw-1.4`) in the background so you won't encounter missing resource errors.
+
+#### Option B: Run the Web Application (Streamlit)
+```bash
+streamlit run app.py
+```
+> **Note:** On first startup, the app automatically downloads required NLTK corpora (`punkt`, `wordnet`, `stopwords`, `omw-1.4`) in the background.
 
 ---
 
