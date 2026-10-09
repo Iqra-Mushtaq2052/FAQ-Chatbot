@@ -1,14 +1,15 @@
-# 🤖 AI Hybrid FAQ Chatbot - Multilingual Desktop Application
+# 🤖 AI Hybrid FAQ Chatbot - Multilingual Web & Desktop Application
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Live%20Demo-Streamlit%20Cloud-FF4B4B.svg)](https://share.streamlit.io/)
 [![GUI](https://img.shields.io/badge/GUI-CustomTkinter-blueviolet.svg)](https://customtkinter.tomschimansky.com/)
 [![NLP](https://img.shields.io/badge/NLP-scikit--learn%20%7C%20NLTK-green.svg)](https://scikit-learn.org/)
 [![LLM](https://img.shields.io/badge/LLM-Ollama%20(qwen2.5--coder%3A32b)-orange.svg)](https://ollama.com/)
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](#license)
 
-A modern, professional-grade desktop chatbot application developed in Python. It features a **Hybrid AI Architecture** combining an offline **TF-IDF + Cosine Similarity** NLP matching engine with live token-streaming from a self-hosted **Ollama Large Language Model** (e.g., `qwen2.5-coder:32b` via ngrok or local network).
+A modern, professional-grade chatbot application developed in Python with support for both **Cloud Web App (Streamlit)** and **Native Desktop GUI (CustomTkinter)**. It features a **Hybrid AI Architecture** combining an offline **TF-IDF + Cosine Similarity** NLP matching engine with live token-streaming from a self-hosted **Ollama Large Language Model** (e.g., `qwen2.5-coder:32b` via ngrok or local network).
 
-The chatbot provides seamless **multilingual communication** in **Hinglish (Roman Urdu)**, **Urdu script**, and **English**, complete with full clipboard copying tools and a real-time database manager.
+The chatbot provides seamless **multilingual communication** in **Hinglish (Roman Urdu)**, **Urdu script**, and **English**, complete with full clipboard copying tools, an interactive database explorer, and instant search.
 
 ---
 
